@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Federico Zinni · Desarrollador Unity</title>
+<meta name="description" content="Portfolio de Federico Zinni, desarrollador Unity: juegos mobile, online, VR y para eventos. Docente en UTN.">
+<meta property="og:title" content="Federico Zinni · Desarrollador Unity">
+<meta property="og:description" content="Juegos jugables, proyectos y experiencia en desarrollo de videojuegos.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF0F2; --surface:#FFFFFF; --ink:#16202C; --muted:#566273; --line:#D3D9E0;
+  --amber:#A35C00; --amber-soft:#F6E6CC; --signal:#2C7A6F;
+  --display:"Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --body:"IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0F1A27; --surface:#15233A; --ink:#ECE7DB; --muted:#9AA8B9; --line:#263A52;
+    --amber:#F2A541; --amber-soft:#3A2D1A; --signal:#6CC3B5;
+    color-scheme:dark;
+  }
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:2px}
+.wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;font-weight:600}
+h2{font-size:clamp(1.9rem,4vw,2.75rem);letter-spacing:-.01em}
+h3{font-size:1.3rem}
+p{margin:0 0 1em;max-width:65ch}
+.lead{font-size:1.15rem;color:var(--muted)}
+
+/* nav */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:1.5rem;height:56px}
+.brand{font-family:var(--display);font-weight:700;text-decoration:none;font-size:1.1rem;white-space:nowrap}
+.brand span{color:var(--amber)}
+.nav ul{display:flex;gap:1.25rem;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a.link{text-decoration:none;color:var(--muted);font-size:.95rem;white-space:nowrap;padding:.4rem 0}
+.nav a.link:hover{color:var(--ink)}
+
+/* hero */
+.hero{position:relative;padding:clamp(3.5rem,9vw,7rem) 0 0;overflow:hidden}
+.freq{font-family:var(--display);color:var(--amber);font-size:1rem;margin-bottom:1rem;display:flex;gap:.6rem;align-items:center}
+.freq .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);animation:blink 1.6s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.hero h1{font-size:clamp(3rem,11vw,7.5rem);font-weight:700;letter-spacing:-.02em;line-height:.95}
+.hero .role{font-family:var(--display);font-size:clamp(1.2rem,2.6vw,1.6rem);margin:1.1rem 0 1rem;font-weight:500}
+.hero p.lead{max-width:56ch}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.75rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--display);font-weight:600;font-size:1rem;text-decoration:none;padding:.75rem 1.2rem;border-radius:4px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--amber);border-color:var(--amber);color:#1A1206}
+.btn:hover{transform:translateY(-1px)}
+.scope{position:relative;margin-top:clamp(2.5rem,6vw,4rem);height:150px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.scope canvas{width:100%;height:100%;display:block}
+.scope .ticks{position:absolute;inset:auto 0 6px 0;display:flex;justify-content:space-between;padding:0 1.25rem;font-family:var(--display);font-size:.75rem;color:var(--muted);pointer-events:none}
+
+section{padding:clamp(4rem,9vw,6.5rem) 0}
+.sec-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:2.25rem}
+.sec-head p{margin:0;color:var(--muted)}
+
+/* Last Signal: always dark, its own world */
+.ls{background:#0A121C;color:#D9DEE4;position:relative;overflow:hidden}
+.ls::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)}
+.ls .wrap{position:relative;z-index:1}
+.ls-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(2rem,5vw,4rem);align-items:start}
+.ls-tag{display:inline-block;font-family:var(--display);color:#F2A541;border:1px solid #6B4A1C;padding:.2rem .6rem;border-radius:3px;font-size:.9rem;margin-bottom:1.25rem}
+.ls h2{font-size:clamp(3rem,9vw,5.5rem);font-weight:700;letter-spacing:.02em;line-height:.9;color:#F1EEE6}
+.ls .glitch{position:relative;display:inline-block}
+.ls p{color:#AEB7C2}
+.ls .lead{color:#C9D0D8;margin-top:1.25rem}
+.ls-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.25rem 0 1.75rem}
+.ls-meta span{font-size:.88rem;padding:.25rem .65rem;border:1px solid #243447;border-radius:3px;color:#C9D0D8}
+.ls .btn{border-color:#D9DEE4;color:#D9DEE4}
+.ls .btn.primary{background:#F2A541;border-color:#F2A541;color:#1A1206}
+.systems{border:1px solid #1E2C3D;background:#0D1824;border-radius:6px;padding:1.25rem 1.4rem}
+.systems h3{font-size:1.05rem;color:#F1EEE6;margin-bottom:.9rem}
+.systems ul{list-style:none;margin:0;padding:0}
+.systems li{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px dashed #1E2C3D;font-size:.97rem}
+.systems li:last-child{border-bottom:0}
+.bars{display:inline-flex;gap:3px;align-items:end;flex:none}
+.bars i{width:4px;background:#2A3A4D;border-radius:1px}
+.bars i:nth-child(1){height:6px}.bars i:nth-child(2){height:10px}.bars i:nth-child(3){height:14px}.bars i:nth-child(4){height:18px}
+.on .bars i{background:#6CC3B5}
+.systems .legend{display:flex;gap:1.25rem;font-size:.85rem;color:#8796A8;margin-top:1rem}
+.systems .group{font-family:var(--display);color:#8796A8;font-size:.9rem;margin:1.1rem 0 .2rem}
+
+/* games */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap}
+.chip{font-family:var(--body);font-size:.92rem;padding:.4rem .85rem;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.games{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem}
+.game{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.game[hidden]{display:none}
+.game .thumb{aspect-ratio:4/3;background:var(--line);overflow:hidden}
+.game .thumb img{width:100%;height:100%;object-fit:cover}
+.game .body{padding:1.1rem 1.15rem 1.25rem;display:flex;flex-direction:column;flex:1}
+.game h3{font-size:1.2rem;margin-bottom:.35rem}
+.game p{font-size:.95rem;color:var(--muted);margin-bottom:.9rem}
+.game .tech{font-size:.82rem;color:var(--signal);font-weight:600;margin-bottom:.9rem}
+.game a.play{margin-top:auto;font-family:var(--display);font-weight:600;color:var(--amber);text-decoration:none}
+.game a.play:hover{text-decoration:underline}
+
+/* Desafío */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.feature-list{list-style:none;padding:0;margin:1.25rem 0}
+.feature-list li{padding:.65rem 0 .65rem 1.5rem;border-bottom:1px solid var(--line);position:relative;max-width:60ch}
+.feature-list li::before{content:"";position:absolute;left:0;top:1.15rem;width:9px;height:9px;border:2px solid var(--amber);border-radius:2px}
+.feature-list strong{font-weight:600}
+.stack{display:flex;flex-wrap:wrap;gap:.45rem}
+.stack span{font-size:.88rem;padding:.25rem .65rem;border-radius:3px;background:var(--amber-soft);color:var(--ink)}
+.desafio-top{display:grid;grid-template-columns:1.3fr .7fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.mascot{width:min(300px,80%);margin-inline:auto;transform:rotate(-4deg)}
+.mascot img{width:100%;height:auto}
+.mascot figcaption{text-align:center;font-size:.88rem;color:var(--muted);margin-top:.5rem;transform:rotate(4deg)}
+.screens{margin-top:clamp(2rem,5vw,3rem)}
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.frame{background:#20367F;border-radius:14px;padding:clamp(.4rem,1.2vw,.8rem);border-top:6px solid #F7C50B;box-shadow:0 24px 50px -30px rgba(16,26,60,.6)}
+.frame img{border-radius:8px;width:100%;height:auto}
+.frame img[hidden]{display:none}
+.screens figcaption{font-size:.92rem;color:var(--muted);margin-top:.75rem}
+/* Noni: lleva los colores del estudio */
+.noni{background:#38306B;color:#FFFEF0}
+.noni p,.noni .lead{color:#D9D5F0}
+.noni-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.noni-logo{width:min(320px,100%);aspect-ratio:1;margin-inline:auto;display:block;mix-blend-mode:screen;background:#000}
+.noni .btn{border-color:#FFFEF0;color:#FFFEF0}
+.noni .video{border-color:#4E4588;margin-top:clamp(2.5rem,5vw,3.5rem)}
+.video{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#000;border:1px solid var(--line)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-facade{position:absolute;inset:0;display:block;cursor:pointer}
+.yt-facade img{width:100%;height:100%;object-fit:cover;opacity:.85}
+.yt-facade:hover img{opacity:1}
+.yt-play{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:#FFFEF0;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.yt-play::after{content:"";position:absolute;left:34px;top:26px;border-style:solid;border-width:16px 0 16px 26px;border-color:transparent transparent transparent #38306B}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* experience */
+.exp{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(2rem,5vw,4rem)}
+.timeline{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+.timeline li{position:relative;padding:0 0 1.9rem 1.5rem}
+.timeline li::before{content:"";position:absolute;left:-7px;top:.45rem;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--muted)}
+.timeline li.now::before{border-color:var(--amber);background:var(--amber)}
+.timeline .when{font-size:.88rem;color:var(--muted)}
+.timeline h3{font-size:1.2rem;margin:.15rem 0 .1rem}
+.timeline .org{font-weight:600;color:var(--signal);font-size:.95rem}
+.timeline p{font-size:.97rem;margin:.45rem 0 0}
+.nda{font-size:.88rem;color:var(--muted);border-left:3px solid var(--amber);padding:.3rem 0 .3rem .8rem;margin:0 0 2rem}
+.skills h3{font-size:1.05rem;margin:1.6rem 0 .6rem}
+.skills h3:first-child{margin-top:0}
+.side-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1.4rem}
+.side-card + .side-card{margin-top:1.25rem}
+.side-card p{font-size:.97rem;margin-bottom:.6rem}
+
+/* contact */
+.contact{border-top:1px solid var(--line)}
+.contact .mail{font-family:var(--display);font-size:clamp(1.3rem,4.2vw,2.6rem);font-weight:600;text-decoration:none;word-break:break-all;color:var(--amber)}
+.contact .mail:hover{text-decoration:underline}
+.links{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.75rem}
+footer{padding:2rem 0 3rem;color:var(--muted);font-size:.9rem}
+
+@media (max-width:860px){
+  .ls-grid,.split,.exp,.desafio-top,.noni-grid{grid-template-columns:1fr}
+  .nav ul{gap:1rem}
+}
+@media (max-width:560px){
+  .brand{display:none}
+  .nav ul{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .freq .dot{animation:none}
+  .xp i{transition:none}
+  .btn:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Secciones">
+  <div class="wrap">
+    <a class="brand" href="#inicio">F<span>/</span>Z</a>
+    <ul>
+      <li><a class="link" href="#last-signal">Last Signal</a></li>
+      <li><a class="link" href="#juegos">Juegos</a></li>
+      <li><a class="link" href="#desafio">Desafío</a></li>
+      <li><a class="link" href="#noni">Noni Games</a></li>
+      <li><a class="link" href="#experiencia">Experiencia</a></li>
+      <li><a class="link" href="#contacto">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="wrap">
+    <div class="freq"><span class="dot" aria-hidden="true"></span>Disponible para proyectos y entrevistas</div>
+    <h1 id="name">Federico Zinni</h1>
+    <p class="role">Desarrollador Unity y docente de videojuegos</p>
+    <p class="lead">Hago juegos en Unity desde 2016: mobile, multijugador online, VR y juegos para eventos. Trabajé para estudios de Argentina, Estados Unidos y España, y enseño desarrollo de videojuegos en la UTN.</p>
+    <div class="actions">
+      <a class="btn primary" href="#juegos">Jugar mis juegos</a>
+      <a class="btn" href="#contacto">Escribirme</a>
+    </div>
+  </div>
+  <div class="scope" aria-hidden="true">
+    <canvas id="scope"></canvas>
+    <div class="ticks"><span>88</span><span>92</span><span>96</span><span>100</span><span>104</span><span>108 MHz</span></div>
+  </div>
+</header>
+
+<!-- ============ LAST SIGNAL ============ -->
+<section class="ls" id="last-signal" aria-labelledby="ls-title">
+  <div class="wrap ls-grid">
+    <div>
+      <span class="ls-tag">Proyecto propio · En desarrollo</span>
+      <h2 id="ls-title" class="glitch">LAST<br>SIGNAL</h2>
+      <p class="lead">Horror psicológico en primera persona, sin combate. Sos un técnico enviado a reactivar una antena abandonada en las montañas. El equipo anterior desapareció y la antena emite voces que no deberían existir.</p>
+      <p>El sonido es la mecánica central: las interferencias y transmisiones de radio te avisan del peligro. Cada sistema que reparás te acerca al final de la misión, pero también despierta más a la entidad.</p>
+      <div class="ls-meta">
+        <span>Unity · URP</span><span>PC</span><span>Primera persona</span><span>20–30 min</span><span>Diseño y programación</span>
+      </div>
+      <div class="actions">
+        <!-- Subí el GDD al repo con este nombre -->
+        <a class="btn primary" href="Last_Signal_GDD.pdf" target="_blank" rel="noopener">Leer el documento de diseño</a>
+      </div>
+      <!-- Cuando tengas material, agregá acá un video o GIF del prototipo:
+      <div class="video" style="margin-top:2rem" data-yt="ID_DEL_VIDEO" data-title="Last Signal, prototipo">
+        <a class="yt-facade" href="https://www.youtube.com/watch?v=ID_DEL_VIDEO" target="_blank" rel="noopener">
+          <img src="https://i.ytimg.com/vi/ID_DEL_VIDEO/hqdefault.jpg" alt="" loading="lazy"><span class="yt-play" aria-hidden="true"></span>
+          <span class="sr-only">Ver el video del prototipo de Last Signal</span>
+        </a>
+      </div>
+      -->
+    </div>
+    <div class="systems">
+      <h3>Estado del prototipo</h3>
+      <p class="group">Funcionando</p>
+      <ul>
+        <li class="on">Cámara en primera persona<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+        <li class="on">Movimiento del jugador<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+        <li class="on">Interacción con objetos<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+        <li class="on">Minijuegos de reparación<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+        <li class="on">IA enemiga: patrulla, persigue y ataca<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+        <li class="on">Cinemática con diálogo y cámara<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+      </ul>
+      <p class="group">Próximos</p>
+      <ul>
+        <li>Linterna con batería<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+        <li>Detección de ruido del jugador<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+        <li>Cordura y alucinaciones<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+        <li>Audio adaptativo y espacial<span class="bars"><i></i><i></i><i></i><i></i></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JUEGOS ============ -->
+<section id="juegos" aria-labelledby="games-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <h2 id="games-title">Juegos para jugar ahora</h2>
+        <p>Juegos para eventos y activaciones. Todos corren en el navegador, también en el celular.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filtrar por tecnología">
+        <button class="chip" data-filter="all" aria-pressed="true">Todos</button>
+        <button class="chip" data-filter="unity" aria-pressed="false">Unity</button>
+        <button class="chip" data-filter="web" aria-pressed="false">HTML y JavaScript</button>
+      </div>
+    </div>
+
+    <!-- EDITAR: completá en cada <p> tu rol, si fue en equipo y el tiempo de desarrollo -->
+    <div class="games">
+      <article class="game" data-tech="unity">
+        <div class="thumb"><img src="https://img.itch.zone/aW1nLzMwODM3Mzg0LmpwZw==/original/OjlTbF.jpg" alt="Captura de Dron Drag Drop" loading="lazy"></div>
+        <div class="body">
+          <h3>Dron Drag Drop</h3>
+          <p>Juego para un evento de carreras de la UTN.</p>
+          <span class="tech">Unity · WebGL</span>
+          <a class="play" href="https://videojuegosutn.itch.io/utnjuegoeventocarreras" target="_blank" rel="noopener">Jugar en itch.io</a>
+        </div>
+      </article>
+      <article class="game" data-tech="unity">
+        <div class="thumb"><img src="https://img.itch.zone/aW1nLzMwODM2NjQxLmpwZw==/original/mqhkQU.jpg" alt="Captura de Fiebre del Oro" loading="lazy"></div>
+        <div class="body">
+          <h3>Fiebre del Oro</h3>
+          <p>Juego de minería para un evento.</p>
+          <span class="tech">Unity · WebGL</span>
+          <a class="play" href="https://videojuegosutn.itch.io/juegominarevento" target="_blank" rel="noopener">Jugar en itch.io</a>
+        </div>
+      </article>
+      <article class="game" data-tech="unity">
+        <div class="thumb"><img src="https://img.itch.zone/aW1nLzMwODM3ODg1LmpwZw==/original/mDrhS0.jpg" alt="Captura de Al Ángulo" loading="lazy"></div>
+        <div class="body">
+          <h3>Al Ángulo</h3>
+          <p>Juego de penales para un evento.</p>
+          <span class="tech">Unity · WebGL</span>
+          <a class="play" href="https://videojuegosutn.itch.io/penales20" target="_blank" rel="noopener">Jugar en itch.io</a>
+        </div>
+      </article>
+      <article class="game" data-tech="web">
+        <div class="thumb"><img src="https://img.itch.zone/aW1nLzMwODM2MDIzLmpwZw==/original/rMy3A%2B.jpg" alt="Captura de Camp Trivia, Wild Andes" loading="lazy"></div>
+        <div class="body">
+          <h3>Camp Trivia – Wild Andes</h3>
+          <p>Trivia temática sobre los Andes.</p>
+          <span class="tech">HTML · JavaScript</span>
+          <a class="play" href="https://videojuegosutn.itch.io/trivias-andes" target="_blank" rel="noopener">Jugar en itch.io</a>
+        </div>
+      </article>
+      <!-- CONFIRMAR: ¿esta trivia también es HTML/JS? -->
+      <article class="game" data-tech="web">
+        <div class="thumb"><img src="https://img.itch.zone/aW1nLzMwODM1NjgzLmpwZw==/original/Ek7s7z.jpg" alt="Captura de Trivia Deportiva" loading="lazy"></div>
+        <div class="body">
+          <h3>Trivia Deportiva</h3>
+          <p>Trivia de deportes para Fundación Encontrarse.</p>
+          <span class="tech">HTML · JavaScript</span>
+          <a class="play" href="https://videojuegosutn.itch.io/triviasencontrarse" target="_blank" rel="noopener">Jugar en itch.io</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DESAFÍO ============ -->
+<section id="desafio" aria-labelledby="desafio-title" style="padding-top:0">
+  <div class="wrap">
+    <div class="desafio-top">
+      <div>
+        <h2 id="desafio-title">Desafío</h2>
+        <p class="lead" style="margin-top:1rem">Una app que convierte la carrera en un juego. Los estudiantes de la Tecnicatura en Desarrollo y Producción de Videojuegos siguen su progreso, suben de nivel y ganan premios.</p>
+        <ul class="feature-list">
+          <li><strong>Niveles y skills.</strong> El avance en la carrera suma experiencia en tres skills (programación, arte y diseño) y sube el nivel general, del 1 al 10.</li>
+          <li><strong>Pase de recompensas.</strong> Cada nivel desbloquea un cosmético para equipar en el avatar, y los niveles altos dan premios reales, como descuentos en el centro de e-learning.</li>
+          <li><strong>Eventos y comunidad.</strong> Calendario de eventos, noticias, mensajes y un espacio de comunidad entre estudiantes.</li>
+        </ul>
+        <!-- EDITAR: si tenés datos (cantidad de alumnos, participación), agregalos acá -->
+        <div class="stack"><span>React</span><span>Firebase</span><span>HTML</span><span>Diseño de gamificación</span></div>
+      </div>
+      <figure class="mascot" style="margin:0 auto">
+        <img src="assets/desafio-personaje.webp" alt="Personaje de Desafío: un pájaro con antifaz, mochila y pañuelo" width="708" height="712" loading="lazy">
+        <figcaption>El personaje de Desafío</figcaption>
+      </figure>
+    </div>
+
+    <figure class="screens" style="margin-inline:0">
+      <div class="tabs" role="group" aria-label="Pantallas de la app">
+        <button class="chip" data-screen="inicio" aria-pressed="true">Inicio</button>
+        <button class="chip" data-screen="recompensas" aria-pressed="false">Pase de recompensas</button>
+      </div>
+      <div class="frame">
+        <img data-screen="inicio" src="assets/desafio-inicio.webp" alt="Pantalla de inicio de Desafío con skills, noticias, calendario de eventos y progreso de nivel" width="1883" height="929" loading="lazy">
+        <img data-screen="recompensas" src="assets/desafio-recompensas.webp" alt="Pase de recompensas de Desafío con cosméticos por nivel e inventario" width="1880" height="942" loading="lazy" hidden>
+      </div>
+      <figcaption id="screen-caption">Inicio: skills, noticias, calendario de eventos y progreso general.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ NONI GAMES ============ -->
+<section class="noni" id="noni" aria-labelledby="noni-title">
+  <div class="wrap">
+    <div class="noni-grid">
+      <video class="noni-logo" src="assets/noni-logo-animado.mp4" poster="assets/noni-logo-poster.jpg" muted playsinline preload="metadata" aria-label="Logo animado de Noni Games"></video>
+      <div>
+        <h2 id="noni-title">Noni Games</h2>
+        <p class="lead" style="margin-top:1rem">El estudio que fundé. Un equipo de programadores, diseñadores y sonidistas que desarrollaba juegos por encargo, desde prototipos hasta productos terminados.</p>
+        <!-- EDITAR: tu rol, años de actividad y juegos destacados -->
+        <p>En el video están los proyectos que hicimos como estudio.</p>
+        <div class="actions">
+          <a class="btn" href="https://www.linkedin.com/company/92492792/" target="_blank" rel="noopener">Noni Games en LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="video" data-yt="VlNw62jOt3A" data-title="Noni Games Studio Portfolio 2024">
+      <a class="yt-facade" href="https://www.youtube.com/watch?v=VlNw62jOt3A" target="_blank" rel="noopener">
+        <img src="https://i.ytimg.com/vi/VlNw62jOt3A/hqdefault.jpg" alt="" loading="lazy">
+        <span class="yt-play" aria-hidden="true"></span>
+        <span class="sr-only">Ver el video del portfolio de Noni Games</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCIA ============ -->
+<section id="experiencia" aria-labelledby="exp-title" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="exp-title">Experiencia</h2></div>
+    <div class="exp">
+      <div>
+        <p class="nda">La mayoría de estos proyectos están bajo acuerdo de confidencialidad, por eso describo el trabajo en lugar de mostrarlo.</p>
+        <!-- EDITAR: sumá 1 o 2 logros concretos por empresa -->
+        <ol class="timeline">
+          <li class="now">
+            <span class="when">2023 – actualidad</span>
+            <h3>Desarrollador Unity</h3>
+            <span class="org">Dingaloo Studios · Estados Unidos</span>
+            <p>Desarrollo de juegos en Unity para un estudio estadounidense, en remoto.</p>
+          </li>
+          <li class="now">
+            <span class="when">2023 – actualidad</span>
+            <h3>Desarrollador freelance</h3>
+            <span class="org">Fiverr</span>
+            <p>Juegos mobile para Android e iOS con publicidad integrada, juegos online con Netcode for GameObjects, Mirror y Photon, experiencias VR y bases de datos con Firebase.</p>
+          </li>
+          <li>
+            <span class="when">2026</span>
+            <h3>Programador de videojuegos</h3>
+            <span class="org">Abylight Studios · España</span>
+            <p>Programación de gameplay para un estudio español.</p>
+          </li>
+          <li>
+            <span class="when">2021 – 2023</span>
+            <h3>Programador de videojuegos</h3>
+            <span class="org">Pizia</span>
+            <p>Desarrollo de juegos en Unity.</p>
+          </li>
+          <li>
+            <span class="when">2024</span>
+            <h3>Fundador</h3>
+            <span class="org">Noni Games</span>
+            <p>Estudio de desarrollo de juegos por encargo.</p>
+          </li>
+        </ol>
+      </div>
+      <aside>
+        <div class="side-card skills">
+          <h3>Motor y lenguaje</h3>
+          <div class="stack"><span>Unity</span><span>C#</span><span>URP</span></div>
+          <h3>Multijugador</h3>
+          <div class="stack"><span>Netcode for GameObjects</span><span>Mirror</span><span>Photon</span></div>
+          <h3>Plataformas</h3>
+          <div class="stack"><span>Android</span><span>iOS</span><span>PC</span><span>VR</span><span>WebGL</span></div>
+          <h3>Servicios y web</h3>
+          <div class="stack"><span>Firebase</span><span>Ads</span><span>React</span><span>JavaScript</span></div>
+        </div>
+        <div class="side-card">
+          <h3 style="font-size:1.05rem;margin-bottom:.6rem">Docencia</h3>
+          <p>Profesor de desarrollo de videojuegos en el Centro de e-Learning de UTN FRBA desde 2021. Antes, profesor de programación en Unity en Grupo Inteligencia Educativa.</p>
+          <p style="margin:0">Mentor en game jams.</p>
+        </div>
+        <div class="side-card">
+          <h3 style="font-size:1.05rem;margin-bottom:.6rem">Formación</h3>
+          <p>Tecnicatura en Programación, Universidad Tecnológica Nacional (2018–2021).</p>
+          <p style="margin:0">Diplomatura en Desarrollo de Videojuegos con Unity, UTN FRBA (2016).</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section class="contact" id="contacto" aria-labelledby="contact-title">
+  <div class="wrap">
+    <h2 id="contact-title" style="margin-bottom:1rem">¿Hablamos?</h2>
+    <p class="lead">Busco sumarme a un equipo como desarrollador Unity. Escribime y te respondo en el día.</p>
+    <a class="mail" href="mailto:federicoalejandrozinni@gmail.com">federicoalejandrozinni@gmail.com</a>
+    <div class="links">
+      <a class="btn" href="https://www.linkedin.com/in/federicoz-9aa905b6" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://videojuegosutn.itch.io" target="_blank" rel="noopener">itch.io</a>
+      <!-- EDITAR: tu usuario de GitHub -->
+      <a class="btn" href="https://github.com/TU-USUARIO" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://www.youtube.com/watch?v=VlNw62jOt3A" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Federico Zinni · Buenos Aires, Argentina · <span id="year"></span></div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* Nombre que "sintoniza" al cargar */
+  var nameEl = document.getElementById('name');
+  var finalText = nameEl.textContent;
+  if(!reduce){
+    var glyphs = '▓▒░/\\|_-=+#%';
+    var frame = 0, total = 26;
+    var tick = setInterval(function(){
+      frame++;
+      var out = '';
+      for(var i=0;i<finalText.length;i++){
+        var c = finalText[i];
+        if(c===' ' || i < (frame/total)*finalText.length) out += c;
+        else out += glyphs[Math.floor(Math.random()*glyphs.length)];
+      }
+      nameEl.textContent = out;
+      if(frame>=total){ clearInterval(tick); nameEl.textContent = finalText; }
+    }, 40);
+  }
+
+  /* Osciloscopio */
+  var canvas = document.getElementById('scope');
+  var ctx = canvas.getContext('2d');
+  var w, h, dpr, t = 0, target = 0.5, focus = 0.5;
+  function size(){
+    dpr = window.devicePixelRatio || 1;
+    w = canvas.clientWidth; h = canvas.clientHeight;
+    canvas.width = w*dpr; canvas.height = h*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function color(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    focus += (target-focus)*0.06;
+    var amber = color('--amber'), muted = color('--line');
+    ctx.strokeStyle = muted; ctx.lineWidth = 1;
+    for(var x=0;x<w;x+=w/24){ ctx.beginPath(); ctx.moveTo(x,h-18); ctx.lineTo(x,h-24); ctx.stroke(); }
+    ctx.strokeStyle = amber; ctx.lineWidth = 1.6; ctx.beginPath();
+    for(var px=0;px<=w;px+=2){
+      var u = px/w;
+      var dist = Math.abs(u-focus);
+      var clean = Math.exp(-dist*dist*60);
+      var noise = (Math.sin(px*0.9+t*7)*Math.sin(px*0.37-t*3))*(1-clean)*10;
+      var wave = Math.sin(u*48 - t*4)*clean*32;
+      var y = h/2 - 8 + wave + noise;
+      if(px===0) ctx.moveTo(px,y); else ctx.lineTo(px,y);
+    }
+    ctx.stroke();
+    ctx.fillStyle = amber; ctx.fillRect(focus*w-1,6,2,h-30);
+    t += 0.016;
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  size(); window.addEventListener('resize', function(){ size(); if(reduce) draw(); });
+  document.querySelector('.hero').addEventListener('pointermove', function(e){
+    var r = canvas.getBoundingClientRect();
+    target = Math.min(1, Math.max(0, (e.clientX - r.left)/r.width));
+  });
+  draw();
+  if(window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(){ if(reduce) draw(); });
+  }
+
+  /* Filtro de juegos */
+  var chips = document.querySelectorAll('.chip');
+  var cards = document.querySelectorAll('.game');
+  chips.forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var f = chip.dataset.filter;
+      chips.forEach(function(c){ c.setAttribute('aria-pressed', c===chip ? 'true':'false'); });
+      cards.forEach(function(card){ card.hidden = !(f==='all' || card.dataset.tech===f); });
+    });
+  });
+
+  /* Pantallas de Desafío */
+  var captions = {
+    inicio: 'Inicio: skills, noticias, calendario de eventos y progreso general.',
+    recompensas: 'Pase de recompensas: cada nivel desbloquea un cosmético para el avatar.'
+  };
+  var tabs = document.querySelectorAll('[data-screen].chip');
+  var shots = document.querySelectorAll('.frame img');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var k = tab.dataset.screen;
+      tabs.forEach(function(t){ t.setAttribute('aria-pressed', t===tab ? 'true':'false'); });
+      shots.forEach(function(img){ img.hidden = img.dataset.screen !== k; });
+      document.getElementById('screen-caption').textContent = captions[k];
+    });
+  });
+
+  /* Video de YouTube: carga el reproductor recién al hacer clic.
+     Abierto como archivo local, YouTube bloquea el embed (error 153), así que ahí abre YouTube. */
+  document.querySelectorAll('[data-yt]').forEach(function(box){
+    box.querySelector('.yt-facade').addEventListener('click', function(e){
+      if(location.protocol === 'file:') return;
+      e.preventDefault();
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube.com/embed/' + box.dataset.yt + '?autoplay=1&rel=0';
+      f.title = box.dataset.title;
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      box.innerHTML = ''; box.appendChild(f);
+    });
+  });
+
+  /* Logo de Noni: se anima una vez al entrar en pantalla */
+  var logo = document.querySelector('.noni-logo');
+  if(!reduce && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(entries, obs){
+      if(entries[0].isIntersecting){ logo.currentTime = 0; logo.play().catch(function(){}); obs.disconnect(); }
+    }, {threshold:.6}).observe(logo);
+  }
+})();
+</script>
+</body>
+</html>
